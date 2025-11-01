@@ -259,17 +259,8 @@ async def get_product(product_id: str):
             
     return SellerProduct(**product_doc)
 
-# Health check
-@api_router.get("/")
-async def root():
-    return {"message": "KIVU Marketplace API", "status": "active"}
-
 
 # --- НОВЫЙ КОД: АДМИН-ЭНДПОИНТЫ ---
-# Вставьте это в конец файла server.py, ПЕРЕД app.include_router(api_router)
-
-from models import SellerProduct  # Убедитесь, что эта модель импортирована вверху файла
-
 async def get_admin_user(user_id: str = Depends(get_current_user)):
     user_doc = await db.users.find_one({"id": user_id})
     if not user_doc or user_doc.get('email') != 'admin@kivu.market':
@@ -311,7 +302,12 @@ async def admin_reject_product(product_id: str, admin_user: dict = Depends(get_a
         raise HTTPException(status_code=404, detail="Product not found")
     return SellerProduct(**updated_product)
 
-# --- КОНЕЦ НОВОГО КОДА ---
+
+# Health check
+@api_router.get("/")
+async def root():
+    return {"message": "KIVU Marketplace API", "status": "active"}
+
 
 # Include the router in the main app
 app.include_router(api_router)

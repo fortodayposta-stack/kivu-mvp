@@ -22,7 +22,7 @@ const ProductDetail = () => {
   const [selectedOption, setSelectedOption] = useState('pool');
   const [addingToCart, setAddingToCart] = useState(false);
 
-  // New state for product loading
+  // --- НОВЫЙ КОД ДЛЯ ЗАГРУЗКИ ---
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const productReviews = getProductReviews(parseInt(id));

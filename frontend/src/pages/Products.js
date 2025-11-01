@@ -42,7 +42,7 @@ const Products = () => {
   const filteredProducts = useMemo(() => {
     let filtered = [...products];
 
-    // Фильтр по поисковому запросу
+    // Фильтр по запросу поиска
     if (searchQuery) {
       filtered = filtered.filter(p =>
         p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -109,37 +109,10 @@ const Products = () => {
                     }`}
                   >
                     {language === 'en' ? 'All Categories' : 'Ibyiciro Byose'}
-                  </button>
-                  {allCategories.map((category) => (
-                    <button
-                      key={category.id}
-                      onClick={() => setSelectedCategory(category.name)}
-                      className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                        selectedCategory === category.name || categoryFromUrl === category.name
-                          ? 'bg-blue-100 text-blue-700 font-semibold'
-                          : 'hover:bg-gray-100 text-gray-700'
-                      }`}
-                    >
-                      {language === 'en' ? category.name : category.nameRw}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Price Range */}
-              <div>
-                <h3 className="font-semibold mb-3 text-gray-800">
-                  {language === 'en' ? 'Price Range' : 'Igiciro'}
-                </h3>
-                <div className="space-y-2">
-                  <button
-                    onClick={() => setPriceRange('all')}
-                    className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                      priceRange === 'all'
-                        ? 'bg-blue-100 text-blue-700 font-semibold'
+                 
                         : 'hover:bg-gray-100 text-gray-700'
-                    }`}
-                  >
+                    `
+              
                     {language === 'en' ? 'All Prices' : 'Ibiciro Byose'}
                   </button>
                   <button

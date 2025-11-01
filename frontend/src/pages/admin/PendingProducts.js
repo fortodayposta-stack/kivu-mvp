@@ -65,14 +65,10 @@ const PendingProducts = ({ onStatsChange }) => {
   };
 
   if (loading) {
-    return (
-      <div className="text-center py-12">
-        <p className="text-lg text-gray-500">Loading pending products...</p>
-      </div>
-    );
+    return <div className="text-center py-12">Loading pending products...</div>;
   }
-
-  const pendingProducts = products.filter(p => p.status === 'pending');
+  
+  const pendingProducts = products;
 
   return (
     <div className="space-y-4">

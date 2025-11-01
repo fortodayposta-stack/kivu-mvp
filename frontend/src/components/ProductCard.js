@@ -54,6 +54,12 @@ const ProductCard = ({ product }) => {
         {/* Pricing */}
         <div className="space-y-2 mb-4">
           <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-600">{t.product.regularPrice}:</span>
+            <span className="text-lg font-bold text-gray-400 line-through">
+              ${product.regularPrice}
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
             <span className="text-sm text-gray-600">{t.product.perItem}:</span>
             <span className="text-lg font-bold text-gray-800">
               ${product.perItemPrice}

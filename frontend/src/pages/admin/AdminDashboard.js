@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { Card, CardContent } from '../../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import { Package, ShoppingCart, MessageSquare, Users } from 'lucide-react';
 import PendingProducts from './PendingProducts';
 import AllOrders from './AllOrders';
 import AllReviews from './AllReviews';
-import axios from 'axios';
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
 
 const AdminDashboard = () => {
-  const { user, token } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [stats, setStats] = useState({
     totalOrders: 0,
@@ -29,35 +25,14 @@ const AdminDashboard = () => {
       return;
     }
 
-    const fetchStats = async () => {
-      if (!token) return;
-      try {
-        const pendingResponse = await axios.get(`${API}/admin/products/pending`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        
-        setStats(prevStats => ({
-          ...prevStats,
-          pendingProducts: pendingResponse.data.length || 0,
-          totalOrders: 156, 
-          totalReviews: 89,
-          totalUsers: 1234,
-        }));
-
-      } catch (error) {
-        console.error("Failed to fetch admin stats", error);
-      }
-    };
-    
-    fetchStats();
-  }, [user, navigate, token]);
-
-  const handlePendingCountChange = (newCount) => {
-     setStats(prevStats => ({
-        ...prevStats,
-        pendingProducts: newCount
-     }));
-  };
+    // Load stats (mock data)
+    setStats({
+      totalOrders: 156,
+      pendingProducts: 12,
+      totalReviews: 89,
+      totalUsers: 1234,
+    });
+  }, [user, navigate]);
 
   if (!user || user.email !== 'admin@kivu.market') {
     return null;
@@ -133,7 +108,7 @@ const AdminDashboard = () => {
               </TabsList>
 
               <TabsContent value="products">
-                <PendingProducts onStatsChange={handlePendingCountChange} />
+                <PendingProducts />
               </TabsContent>
 
               <TabsContent value="orders">
