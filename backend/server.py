@@ -149,20 +149,38 @@ async def add_to_cart(item: CartItem, user_id: str = Depends(get_current_user)):
     return {"message": "Item added to cart"}
 
 @api_router.delete("/cart/remove/{product_id}")
-async def remove_from_cart(product_id: int, user_id: str = Depends(get_current_user)):
+async def remove_from_cart(product_id: str, is_pool_purchase: bool = False, user_id: str = Depends(get_current_user)):
     cart_doc = await db.carts.find_one({"user_id": user_id})
     if not cart_doc:
         raise HTTPException(status_code=404, detail="Cart not found")
-    
+
     cart = Cart(**cart_doc)
-    cart.items = [item for item in cart.items if item.get('product_id') != product_id]
+
+    # Новая, более точная логика удаления:
+    # Мы ищем точный товар (по ID и типу покупки) и удаляем его.
+    # Это предотвращает случайное удаление "обычного" товара, если удалялся "pool"
+    item_found = False
+    new_items = []
+    for item in cart.items:
+        if item.get('product_id') == product_id and item.get('is_pool_purchase') == is_pool_purchase and not item_found:
+            item_found = True  # Нашли и "пропускаем" (т.е. не добавляем в new_items)
+        else:
+            new_items.append(item)
+
+    if not item_found:
+        # Если вы хотите быть строгим, вы можете раскомментировать это
+        # raise HTTPException(status_code=404, detail="Item not found in cart with specified type")
+        # Но пока мы просто обновим корзину (даже если ничего не изменилось)
+        pass
+
+    cart.items = new_items
     cart.updated_at = datetime.utcnow()
-    
+
     await db.carts.update_one(
         {"user_id": user_id},
-        {"$set": cart.dict()}
+        {"$set": {"items": [item.dict() for item in cart.items], "updated_at": cart.updated_at}}
     )
-    
+
     return {"message": "Item removed from cart"}
 
 @api_router.delete("/cart/clear")
@@ -194,8 +212,9 @@ async def create_order(order_data: OrderCreate, user_id: str = Depends(get_curre
     return order
 
 @api_router.get("/orders", response_model=List[Order])
-async def get_orders(user_id: str = Depends(get_current_user)):
-    orders = await db.orders.find({"user_id": user_id}).to_list(1000)
+async def get_orders(user_id: str = Depends(get_current_user), skip: int = 0, limit: int = 20):
+    orders_cursor = db.orders.find({"user_id": user_id}).sort("created_at", -1).skip(skip).limit(limit)
+    orders = await orders_cursor.to_list(length=limit)
     return [Order(**order) for order in orders]
 
 @api_router.get("/orders/{order_id}", response_model=Order)
@@ -237,13 +256,15 @@ async def create_seller_product(product_data: SellerProductCreate, user_id: str 
     return product
 
 @api_router.get("/seller/products", response_model=List[SellerProduct])
-async def get_seller_products(user_id: str = Depends(get_current_user)):
-    products = await db.seller_products.find({"seller_id": user_id}).to_list(1000)
+async def get_seller_products(user_id: str = Depends(get_current_user), skip: int = 0, limit: int = 20):
+    products_cursor = db.seller_products.find({"seller_id": user_id}).sort("created_at", -1).skip(skip).limit(limit)
+    products = await products_cursor.to_list(length=limit)
     return [SellerProduct(**product) for product in products]
 
 @api_router.get("/seller/products/all", response_model=List[SellerProduct])
-async def get_all_seller_products():
-    products = await db.seller_products.find({"status": "approved"}).to_list(1000)
+async def get_all_seller_products(skip: int = 0, limit: int = 20):
+    products_cursor = db.seller_products.find({"status": "approved"}).sort("created_at", -1).skip(skip).limit(limit)
+    products = await products_cursor.to_list(length=limit)
     return [SellerProduct(**product) for product in products]
 
 @api_router.get("/products/{product_id}", response_model=SellerProduct)
@@ -263,7 +284,9 @@ async def get_product(product_id: str):
 # --- НОВЫЙ КОД: АДМИН-ЭНДПОИНТЫ ---
 async def get_admin_user(user_id: str = Depends(get_current_user)):
     user_doc = await db.users.find_one({"id": user_id})
-    if not user_doc or user_doc.get('email') != 'admin@kivu.market':
+
+    # ИЗМЕНЕНИЕ: Проверяем поле 'account_type' вместо 'email'
+    if not user_doc or user_doc.get('account_type') != 'admin':
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You do not have permission to perform this action"
@@ -271,13 +294,15 @@ async def get_admin_user(user_id: str = Depends(get_current_user)):
     return user_doc
 
 @api_router.get("/admin/products/all", response_model=List[SellerProduct])
-async def admin_get_all_products(admin_user: dict = Depends(get_admin_user)):
-    products = await db.seller_products.find().to_list(1000)
+async def admin_get_all_products(admin_user: dict = Depends(get_admin_user), skip: int = 0, limit: int = 50):
+    products_cursor = db.seller_products.find().sort("created_at", -1).skip(skip).limit(limit)
+    products = await products_cursor.to_list(length=limit)
     return [SellerProduct(**product) for product in products]
 
 @api_router.get("/admin/products/pending", response_model=List[SellerProduct])
-async def admin_get_pending_products(admin_user: dict = Depends(get_admin_user)):
-    products = await db.seller_products.find({"status": "pending"}).to_list(1000)
+async def admin_get_pending_products(admin_user: dict = Depends(get_admin_user), skip: int = 0, limit: int = 50):
+    products_cursor = db.seller_products.find({"status": "pending"}).sort("created_at", -1).skip(skip).limit(limit)
+    products = await products_cursor.to_list(length=limit)
     return [SellerProduct(**product) for product in products]
 
 @api_router.post("/admin/products/approve/{product_id}", response_model=SellerProduct)

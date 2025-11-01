@@ -101,3 +101,397 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+## user_problem_statement: "Первоначальная настройка и анализ проекта. Убедиться, что все базовые функции отслеживаются и готовы к тестированию."
+##
+## backend:
+##   # Auth
+##   - task: "Auth: Register User"
+##     implemented: true
+##     working: "NA"
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка"
+##
+##   - task: "Auth: Login User"
+##     implemented: true
+##     working: "NA"
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка"
+##
+##   - task: "Auth: Get Me (/auth/me)"
+##     implemented: true
+##     working: "NA"
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "medium"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка"
+##
+##   # Cart
+##   - task: "Cart: Get Cart"
+##     implemented: true
+##     working: "NA"
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка"
+##
+##   - task: "Cart: Add to Cart"
+##     implemented: true
+##     working: "NA"
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка"
+##
+##   - task: "Cart: Remove from Cart"
+##     implemented: true
+##     working: "NA"
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         - working: false
+##         - agent: "main"
+##         - comment: "Исправлен тип product_id (int->str) и добавлена логика для is_pool_purchase. Требуется тестирование."
+##
+##   - task: "Cart: Clear Cart"
+##     implemented: true
+##     working: "NA"
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "medium"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка"
+##
+##   # Orders
+##   - task: "Orders: Create Order"
+##     implemented: true
+##     working: "NA"
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка"
+##
+##   - task: "Orders: Get My Orders"
+##     implemented: true
+##     working: "NA"
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "medium"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Добавлена пагинация (skip/limit). Требуется тестирование."
+##
+##   - task: "Orders: Get Single Order"
+##     implemented: true
+##     working: "NA"
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "medium"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка"
+##
+##   # Products (Seller)
+##   - task: "Products: Create Product (Seller)"
+##     implemented: true
+##     working: "NA"
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка"
+##
+##   - task: "Products: Get My Products (Seller)"
+##     implemented: true
+##     working: "NA"
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "medium"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Добавлена пагинация (skip/limit). Требуется тестирование."
+##
+##   # Products (Public)
+##   - task: "Products: Get All Approved Products (Public)"
+##     implemented: true
+##     working: "NA"
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Добавлена пагинация (skip/limit). Требуется тестирование."
+##
+##   - task: "Products: Get Single Product (Public)"
+##     implemented: true
+##     working: "NA"
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка"
+##
+##   # Admin
+##   - task: "Admin: Get All Products"
+##     implemented: true
+##     working: "NA"
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "low"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Добавлена пагинация. Исправлена логика проверки админа. Требуется тестирование."
+##
+##   - task: "Admin: Get Pending Products"
+##     implemented: true
+##     working: "NA"
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Добавлена пагинация. Исправлена логика проверки админа. Требуется тестирование."
+##
+##   - task: "Admin: Approve Product"
+##     implemented: true
+##     working: "NA"
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Исправлена логика проверки админа (email->account_type). Требуется тестирование."
+##
+##   - task: "Admin: Reject Product"
+##     implemented: true
+##     working: "NA"
+##     file: "backend/server.py"
+##     stuck_count: 0
+##     priority: "medium"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Исправлена логика проверки админа (email->account_type). Требуется тестирование."
+##
+##
+## frontend:
+##   - task: "Page: Home"
+##     implemented: true
+##     working: "NA"
+##     file: "frontend/src/pages/Home.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка. Требует проверки API продуктов."
+##
+##   - task: "Page: Products"
+##     implemented: true
+##     working: "NA"
+##     file: "frontend/src/pages/Products.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка. Требует проверки API продуктов и пагинации."
+##
+##   - task: "Page: Product Detail"
+##     implemented: true
+##     working: "NA"
+##     file: "frontend/src/pages/ProductDetail.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка"
+##
+##   - task: "Page: Login"
+##     implemented: true
+##     working: "NA"
+##     file: "frontend/src/pages/Login.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка"
+##
+##   - task: "Page: Register"
+##     implemented: true
+##     working: "NA"
+##     file: "frontend/src/pages/Register.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка"
+##
+##   - task: "Page: Cart"
+##     implemented: true
+##     working: "NA"
+##     file: "frontend/src/pages/Cart.js"
+##     stuck_count: 0
+##     priority: "high"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка. Требует проверки API /cart/add и /cart/remove."
+##
+##   - task: "Page: Checkout"
+##     implemented: true
+##     working: "NA"
+##     file: "frontend/src/pages/Checkout.js"
+##     stuck_count: 0
+##     priority: "medium"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка. Требует проверки API /orders."
+##
+##   - task: "Page: Order Success"
+##     implemented: true
+##     working: "NA"
+##     file: "frontend/src/pages/OrderSuccess.js"
+##     stuck_count: 0
+##     priority: "low"
+##     needs_retesting: false
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка"
+##
+##   - task: "Page: My Orders"
+##     implemented: true
+##     working: "NA"
+##     file: "frontend/src/pages/Orders.js"
+##     stuck_count: 0
+##     priority: "medium"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка. Требует проверки API /orders и пагинации."
+##
+##   - task: "Page: Admin Dashboard"
+##     implemented: true
+##     working: "NA"
+##     file: "frontend/src/pages/admin/AdminDashboard.js"
+##     stuck_count: 0
+##     priority: "medium"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка. Требует проверки API админки."
+##
+##   - task: "Page: Add Product (Seller)"
+##     implemented: true
+##     working: "NA"
+##     file: "frontend/src/pages/seller/AddProduct.js"
+##     stuck_count: 0
+##     priority: "medium"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка"
+##
+##   - task: "Page: My Products (Seller)"
+##     implemented: true
+##     working: "NA"
+##     file: "frontend/src/pages/seller/MyProducts.js"
+##     stuck_count: 0
+##     priority: "medium"
+##     needs_retesting: true
+##     status_history:
+##         - working: "NA"
+##         - agent: "main"
+##         - comment: "Первоначальная настройка"
+##
+##
+## metadata:
+##   created_by: "main"
+##   version: "1.1"
+##   test_sequence: 1
+##   run_ui: true
+##
+## test_plan:
+##   current_focus:
+##     - "Cart: Remove from Cart"
+##     - "Admin: Approve Product"
+##     - "Admin: Get Pending Products"
+##     - "Products: Get All Approved Products (Public)"
+##     - "Orders: Get My Orders"
+##   stuck_tasks:
+##     []
+##   test_all: false
+##   test_priority: "high_first"
+##
+## agent_communication:
+##     - agent: "main"
+##     - message: "Заполнил test_result.md на основе анализа server.py и App.js. Отметил для пере-тестирования задачи, связанные с недавними исправлениями (пагинация, auth админа, удаление из корзины)."
