@@ -2,12 +2,15 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import ProductCard from '../components/ProductCard';
-import { allCategories } from '../mock/allProducts';
+// ИЗМЕНЕНИЕ: Мы больше не импортируем "mock" категории
+// import { allCategories } from '../mock/allProducts'; 
 import { Filter } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import axios from 'axios';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+// ИЗМЕНЕНИЕ: Убедимся, что REACT_APP_BACKEND_URL задан в .env файле фронтенда
+// Если нет, можно временно прописать http://localhost:8000
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
 const API = `${BACKEND_URL}/api`;
 
 const Products = () => {
@@ -16,6 +19,7 @@ const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [priceRange, setPriceRange] = useState('all');
   const [products, setProducts] = useState([]); // Состояние для хранения товаров
+  const [categories, setCategories] = useState([]); // ИЗМЕНЕНИЕ: Новое состояние для НАСТОЯЩИХ категорий
   const [loading, setLoading] = useState(true); // Состояние загрузки
   const [error, setError] = useState(null); // Состояние для ошибок
 
@@ -27,17 +31,24 @@ const Products = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${API}/products`);
+        // ИЗМЕНЕНИЕ: Запрашиваем правильный URL
+        const response = await axios.get(`${API}/seller/products/all`);
         setProducts(response.data);
+
+        // ИЗМЕНЕНИЕ: Автоматически создаем список категорий из полученных товаров
+        const uniqueCategories = [...new Set(response.data.map(p => p.category))];
+        setCategories(uniqueCategories);
+
       } catch (err) {
         setError('Ошибка при загрузке товаров');
+        console.error(err); // Добавим лог для отладки
       } finally {
         setLoading(false);
       }
     };
 
     fetchProducts();
-  }, []);
+  }, []); // Пустой массив зависимостей, чтобы загрузка происходила 1 раз
 
   const filteredProducts = useMemo(() => {
     let filtered = [...products];
@@ -68,8 +79,8 @@ const Products = () => {
     return filtered;
   }, [searchQuery, selectedCategory, categoryFromUrl, priceRange, products]);
 
-  if (loading) return <div>Загрузка...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) return <div className="container mx-auto px-4 py-8">Загрузка...</div>;
+  if (error) return <div className="container mx-auto px-4 py-8 text-red-600">{error}</div>;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-8">
@@ -96,7 +107,7 @@ const Products = () => {
                 </h2>
               </div>
 
-              {/* Categories */}
+              {/* ИЗМЕНЕНИЕ: Категории теперь загружаются из state */}
               <div className="mb-6">
                 <h3 className="font-semibold mb-3 text-gray-800">{t.categories}</h3>
                 <div className="space-y-2">
@@ -109,10 +120,39 @@ const Products = () => {
                     }`}
                   >
                     {language === 'en' ? 'All Categories' : 'Ibyiciro Byose'}
-                 
+                  </button>
+                  {/* Рендерим наши НАСТОЯЩИЕ категории */}
+                  {categories.map((category) => (
+                    <button
+                      key={category}
+                      onClick={() => setSelectedCategory(category)}
+                      className={`w-full text-left px-3 py-2 rounded-lg transition-colors capitalize ${
+                        selectedCategory === category
+                          ? 'bg-blue-100 text-blue-700 font-semibold'
+                          : 'hover:bg-gray-100 text-gray-700'
+                      }`}
+                    >
+                      {/* TODO: Здесь можно добавить перевод для названий категорий, если нужно */}
+                      {category}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Price Range */}
+              <div>
+                <h3 className="font-semibold mb-3 text-gray-800">
+                  {language === 'en' ? 'Price Range' : 'Ibiciro'}
+                </h3>
+                <div className="space-y-2">
+                  <button
+                    onClick={() => setPriceRange('all')}
+                    className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
+                      priceRange === 'all'
+                        ? 'bg-blue-100 text-blue-700 font-semibold'
                         : 'hover:bg-gray-100 text-gray-700'
-                    `
-              
+                    }`}
+                  >
                     {language === 'en' ? 'All Prices' : 'Ibiciro Byose'}
                   </button>
                   <button
